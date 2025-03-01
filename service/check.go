@@ -45,7 +45,7 @@ func NewCheckService(session *discordgo.Session, config structures.Config, regis
 	latency := prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "bot_latency",
-			Help: "Time from the last request message to response message in milliseconds",
+			Help: "Time from the last request message to its respective response message in milliseconds",
 		},
 		[]string{BotLabel, ChannelLabel},
 	)
