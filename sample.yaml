@@ -1,0 +1,6 @@
+- bot: 644056473995051070 # bot user id
+  channel: 947320388642291762 # channel id (ensure both bots can access this channel)
+  keyword: 'check' # message content will be `<@bot-id> check`
+- bot: 106365431030456388
+  channel: 947320388694995641
+  keyword: 'pong'
