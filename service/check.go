@@ -6,6 +6,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/prometheus/client_golang/prometheus"
 	"log"
+	"math/rand"
 	"strconv"
 	"sync"
 	"time"
@@ -149,6 +150,9 @@ func (c *CheckService) Start() {
 func (c *CheckService) run() {
 	for idx, config := range c.config {
 		go c.loop(&config, idx)
+
+		// implement random jitter to balance the load
+		time.Sleep(time.Duration(rand.Intn(1000)))
 	}
 }
 
@@ -160,7 +164,12 @@ func (c *CheckService) loop(target *structures.Target, index int) {
 	timeout := time.Duration(target.Timeout) * time.Second
 	labels := prometheus.Labels{BotLabel: bot, ChannelLabel: channel}
 
-	for range time.NewTicker(7 * time.Second).C {
+	interval := 15 * time.Second
+	if timeout > interval {
+		interval = timeout
+	}
+
+	for range time.NewTicker(interval).C {
 		message, err := c.session.ChannelMessageSend(channel, content)
 		if err != nil {
 			log.Printf("error checking for %v in channel %v: %v", bot, channel, err)
