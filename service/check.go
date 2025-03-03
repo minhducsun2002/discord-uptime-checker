@@ -176,8 +176,10 @@ func (c *CheckService) loop(target *structures.Target, index int) {
 			continue
 		}
 
+		c.lock.Lock()
 		messageId, _ := strconv.ParseUint(message.ID, 10, 64)
 		c.responses[messageId] = index
+		c.lock.Unlock()
 
 		go func() {
 			time.Sleep(timeout)
