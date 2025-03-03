@@ -190,7 +190,7 @@ func (c *CheckService) loop(target *structures.Target, index int) {
 				delete(c.responses, messageId)
 
 				c.upGauge.With(labels).Set(0)
-				c.latencyGauge.With(labels).Set(-1)
+				c.latencyGauge.Delete(labels)
 				c.lastUpdateGauge.With(labels).SetToCurrentTime()
 
 				c.goClean(channel, message.ID)
