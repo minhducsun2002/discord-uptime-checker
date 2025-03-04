@@ -150,9 +150,6 @@ func (c *CheckService) Start() {
 func (c *CheckService) run() {
 	for idx, config := range c.config {
 		go c.loop(&config, idx)
-
-		// implement random jitter to balance the load
-		time.Sleep(time.Duration(rand.Intn(1000)))
 	}
 }
 
@@ -170,6 +167,9 @@ func (c *CheckService) loop(target *structures.Target, index int) {
 	}
 
 	for range time.NewTicker(interval).C {
+		// implement random jitter to balance the load
+		time.Sleep(time.Duration(rand.Intn(1000)))
+
 		message, err := c.session.ChannelMessageSend(channel, content)
 		if err != nil {
 			log.Printf("error checking for %v in channel %v: %v", bot, channel, err)
