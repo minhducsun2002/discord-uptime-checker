@@ -170,13 +170,14 @@ func (c *CheckService) loop(target *structures.Target, index int) {
 		// implement random jitter to balance the load
 		time.Sleep(time.Duration(rand.Intn(1000)))
 
+		c.lock.Lock()
 		message, err := c.session.ChannelMessageSend(channel, content)
 		if err != nil {
 			log.Printf("error checking for %v in channel %v: %v", bot, channel, err)
+			c.lock.Unlock()
 			continue
 		}
 
-		c.lock.Lock()
 		messageId, _ := strconv.ParseUint(message.ID, 10, 64)
 		c.responses[messageId] = index
 		c.lock.Unlock()
